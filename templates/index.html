@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход / Регистрация</title>
+    <link href="/static/css/tailwind.css" rel="stylesheet">
+    <style>
+        #successModal {
+            display: none;
+        }
+        #successModal.show {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+        <!-- Toggle Buttons -->
+        <div class="flex mb-6">
+            <button id="loginTab" class="flex-1 py-2 text-center border-b-2 border-blue-500 text-blue-500 font-semibold">Вход</button>
+            <button id="registerTab" class="flex-1 py-2 text-center border-b-2 border-gray-200 text-gray-500">Регистрация</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="block">
+            <div class="mb-4">
+                <label for="loginUsername" class="block text-gray-700 text-sm font-bold mb-2">Имя пользователя</label>
+                <input type="text" id="loginUsername" required 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-6">
+                <label for="loginPassword" class="block text-gray-700 text-sm font-bold mb-2">Пароль</label>
+                <input type="password" id="loginPassword" required 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div id="error-message" class="text-red-500 text-sm mb-4"></div>
+            <button type="submit" 
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                Войти
+            </button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" class="hidden">
+            <div class="mb-4">
+                <label for="registerUsername" class="block text-gray-700 text-sm font-bold mb-2">Имя пользователя</label>
+                <input type="text" id="registerUsername" required 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4">
+                <label for="registerEmail" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                <input type="email" id="registerEmail" required 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4">
+                <label for="registerPhone" class="block text-gray-700 text-sm font-bold mb-2">Телефон (необязательно)</label>
+                <input type="tel" id="registerPhone" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-6">
+                <label for="registerPassword" class="block text-gray-700 text-sm font-bold mb-2">Пароль</label>
+                <input type="password" id="registerPassword" required 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <button type="submit" 
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                Зарегистрироваться
+            </button>
+        </form>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full">
+            <h2 class="text-2xl font-bold mb-4 text-green-600">Регистрация прошла успешно!</h2>
+            <p class="mb-4">Вы можете войти с использованием своих новых учетных данных.</p>
+            <button id="closeSuccessModal" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Закрыть
+            </button>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/login.js"></script>
+</body>
+</html>

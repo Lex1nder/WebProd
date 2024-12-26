@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+    <link href="/static/css/tailwind.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-bold text-blue-600">Мой сайт</a>
+                </div>
+                <div class="flex items-center">
+                    <span id="username" class="mr-4 text-gray-700">{{ username }}</span>
+                    <a href="/logout" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                        Выйти
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-10 px-4">
+        <h1 class="text-3xl font-bold mb-6">Добро пожаловать, <span id="welcomeUsername">{{ username }}</span>!</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Ваш профиль</h2>
+                <p><strong>Имя пользователя:</strong> {{ username }}</p>
+                <p><strong>Email:</strong> {{ email }}</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Статистика</h2>
+                <p>Дата регистрации: {{ date }}</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Действия</h2>
+                <a href="#" class="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2">
+                    Редактировать профиль
+                </a>
+                <a href="#" class="block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    Настройки
+                </a>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom global styles */
+body {
+    @apply font-sans antialiased text-gray-900;
+}
+
+.btn {
+    @apply px-4 py-2 rounded transition duration-300 ease-in-out;
+}
+
+.btn-primary {
+    @apply bg-blue-500 text-white hover:bg-blue-600;
+}
+
+.btn-secondary {
+    @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+}
+
+.form-input {
+    @apply w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.card {
+    @apply bg-white shadow-md rounded-lg p-6;
+}

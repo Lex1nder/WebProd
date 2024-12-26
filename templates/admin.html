@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ Панель</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .edit-form {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+            <div class="container">
+                <a class="navbar-brand" href="#">Админ Панель</a>
+                <div class="navbar-nav me-auto">
+                    <a class="nav-link active" href="{{ url_for('admin_panel') }}">Товары</a>
+                    <a class="nav-link" href="{{ url_for('admin_orders') }}">Заказы</a>
+                </div>
+                <div class="d-flex align-items-center">
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Выйти</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div id="alertContainer"></div>
+            
+            <h1 class="mb-4">Управление товарами</h1>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Описание</th>
+                        <th>Цена</th>
+                        <th>Количество</th>
+                        <th>Категория</th>
+                        <th>Изображение</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr id="product-{{ product.id }}">
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.description }}</td>
+                        <td>{{ product.price }} ₽</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>
+                            <img src="{{ product.image_url or '/static/default-product.jpg' }}" alt="{{ product.name }}" style="width: 100px;">
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="showEditForm({{ product.id }})">Редактировать</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteProduct({{ product.id }})">Удалить</button>
+                        </td>
+                    </tr>
+                    <tr id="edit-form-{{ product.id }}" class="edit-form">
+                        <td colspan="7">
+                            <form onsubmit="editProduct(event, {{ product.id }})" class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Название</label>
+                                    <input type="text" class="form-control" name="name" value="{{ product.name }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Категория</label>
+                                    <input type="text" class="form-control" name="category" value="{{ product.category }}">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Описание</label>
+                                    <textarea class="form-control" name="description">{{ product.description }}</textarea>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Цена</label>
+                                    <input type="number" class="form-control" name="price" value="{{ product.price }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Количество</label>
+                                    <input type="number" class="form-control" name="quantity" value="{{ product.quantity }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Изображение</label>
+                                    <input type="file" class="form-control" name="image" accept="image/*">
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-success">Сохранить</button>
+                                    <button type="button" class="btn btn-secondary" onclick="hideEditForm({{ product.id }})">Отмена</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2 class="mt-5">Добавить новый товар</h2>
+            <form id="addProductForm" onsubmit="addProduct(event)" class="row g-3">
+                <div class="col-md-6">
+                    <label for="productName" class="form-label">Название</label>
+                    <input type="text" class="form-control" name="name" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="productCategory" class="form-label">Категория</label>
+                    <input type="text" class="form-control" name="category">
+                </div>
+                <div class="col-md-12">
+                    <label for="productDescription" class="form-label">Описание</label>
+                    <textarea class="form-control" name="description" rows="3"></textarea>
+                </div>
+                <div class="col-md-4">
+                    <label for="productPrice" class="form-label">Цена</label>
+                    <input type="number" class="form-control" name="price" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="productQuantity" class="form-label">Количество</label>
+                    <input type="number" class="form-control" name="quantity" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="productImage" class="form-label">Изображение</label>
+                    <input type="file" class="form-control" name="image" accept="image/*">
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-success">Добавить товар</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} alert-dismissible fade show`;
+            alert.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            alertContainer.appendChild(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        function showEditForm(productId) {
+            document.getElementById(`edit-form-${productId}`).style.display = 'table-row';
+        }
+
+        function hideEditForm(productId) {
+            document.getElementById(`edit-form-${productId}`).style.display = 'none';
+        }
+
+        function addProduct(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch('/admin/add_product', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showAlert(data.error, 'danger');
+                } else {
+                    showAlert(data.message);
+                    form.reset();
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Произошла ошибка при добавлении товара', 'danger');
+            });
+        }
+
+        function editProduct(event, productId) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch(`/admin/edit_product/${productId}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showAlert(data.error, 'danger');
+                } else {
+                    showAlert(data.message);
+                    hideEditForm(productId);
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Произошла ошибка при редактировании товара', 'danger');
+            });
+        }
+
+        function deleteProduct(productId) {
+            if (confirm('Вы уверены, что хотите удалить этот товар?')) {
+                fetch(`/admin/delete_product/${productId}`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showAlert(data.error, 'danger');
+                    } else {
+                        showAlert(data.message);
+                        document.getElementById(`product-${productId}`).remove();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('Произошла ошибка при удалении товара', 'danger');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

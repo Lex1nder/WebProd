@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Автоаксессуары</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-image: url('/static/images/bac.jpg');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .product-card {
+            transition: transform 0.3s;
+            background-color: rgba(255, 255, 255, 0.3);
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            backdrop-filter: blur(16px);
+            z-index: -1;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+
+        }
+        .product-card img {
+            height: 250px;
+            width: 100%;
+            object-fit: contain;
+            padding: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.3);
+            border: none;
+            border-radius: 20px;
+        }
+        .image-container {
+            backdrop-filter: blur(16px);
+            background-color: rgba(255, 255, 255, 0.1);
+            height: 250px;
+            width: 100%;
+        }
+        .cart-count {
+            position: relative;
+            top: -10px;
+            right: 5px;
+            background-color: rgb(23, 27, 80);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.3) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .container-fluid {
+            padding-top: 80px;
+        }
+        .page-title {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .card-body {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .card-footer {
+            background-color: rgba(248, 249, 250, 0.3);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #0c0c0c; /* Оранжевый цвет */
+            border-color: #0c0c0c; /* Оранжевый цвет для границы */
+        }
+        
+        .btn-primary:hover {
+            background-color: #000000; /* Тёмно-оранжевый цвет при наведении */
+            border-color: #000000;
+        }
+        .btn-outline-primary {
+            color: #0c0c0c; /* Оранжевый цвет текста */
+            border-color: #0c0c0c; /* Оранжевый цвет границы */
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #000000; /* Оранжевый цвет фона при наведении */
+            border-color: #000000;
+            color: white; /* Белый цвет текста при наведении */
+        }
+        .text-primary {
+            color: #0c0c0c !important; /* Оранжевый цвет */
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+            <div class="container">
+                <a class="navbar-brand" href="#">Автомаркет</a>
+                <div class="d-flex align-items-center">
+                    <a href="{{ url_for('view_cart') }}" class="btn btn-outline-primary me-3 position-relative">
+                        <i class="bi bi-cart"></i> Корзина
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                    <span class="me-3">{{ username }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Выйти</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div id="alertContainer"></div>
+            <h1 class="mb-4 page-title">Автоаксессуары</h1>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for product in products %}
+                <div class="col">
+                    <div class="card product-card h-80">
+                        <div class="image-container">
+                            <img src="{{ product.image_url or '/static/default-product.jpg' }}" style="border-radius: 20px;" sclass="card-img-top" alt="{{ product.name }}">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 text-primary mb-0">{{ product.price }} ₽</span>
+                                <button onclick="addToCart({{ product.id }})" class="btn btn-primary">
+                                    <i class="bi bi-cart-plus"></i> В корзину
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Категория: {{ product.category }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} alert-dismissible fade show`;
+            alert.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            alertContainer.appendChild(alert);
+            setTimeout(() => alert.remove(), 3000);
+        }
+
+        function updateCartCount() {
+            fetch('/cart/count')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('cartCount').textContent = data.count;
+                });
+        }
+
+        function addToCart(productId) {
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ product_id: productId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showAlert(data.error, 'danger');
+                } else {
+                    showAlert('Товар добавлен в корзину');
+                    updateCartCount();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Произошла ошибка при добавлении в корзину', 'danger');
+            });
+        }
+
+        // Update cart count when page loads
+        updateCartCount();
+    </script>
+</body>
+</html>
